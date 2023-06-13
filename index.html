@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sprzedaż samochodów</title>
+  <style>
+    body {
+      background-color: #AAAAFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .car-list {
+      display: block;
+    }
+
+    .car {
+      margin-bottom: 20px;
+    }
+
+    .car img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .car-details {
+      display: none;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div class="car-list">
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <div class="car">
+        <img src="car3.jpg" alt="Samochód 1">
+        <h3>Marka: Renault</h3>
+        <p>Model: Koleos</p>
+        <p>Rocznik: 2020</p>
+        <p>Moc silnika: 116 kW</p>
+        <p>Przebieg: 50 000 km</p>
+        <p>Cena: 20 000 PLN</p>
+        <button onclick="showConfigurationForm(1, 20000)">Konfiguruj</button>
+      </div>
+      <div class="car">
+        <img src="car1.jpg" alt="Samochód 3">
+        <h3>Marka: Renault</h3>
+        <p>Model: Austral</p>
+        <p>Rocznik: 2020</p>
+        <p>Moc silnika: 146 kW</p>
+        <p>Przebieg: 50 000 km</p>
+        <p>Cena: 23 000 PLN</p>
+        <button onclick="showConfigurationForm(1, 23000)">Konfiguruj</button>
+      </div>
+      <div class="car">
+        <img src="car2.jpg" alt="Samochód 2">
+        <h3>Marka: Audi</h3>
+        <p>Model: RS 5 Coupé</p>
+        <p>Rocznik: 2019</p>
+        <p>Moc silnika: 331 kW</p>
+        <p>Przebieg: 80 000 km</p>
+        <p>Cena: 25 000 PLN</p>
+        <button onclick="showConfigurationForm(2, 25000) ">Konfiguruj</button>
+      </div>
+      <div class="car">
+        <img src="car4.jpg" alt="Samochód 4">
+        <h3>Marka: Audi</h3>
+        <p>Model: A8 S8 TFSI</p>
+        <p>Rocznik: 2019</p>
+        <p>Moc silnika: 420 kW kW</p>
+        <p>Przebieg: 80 000 km</p>
+        <p>Cena: 50 000 PLN</p>
+        <button onclick="showConfigurationForm(2, 50000) ">Konfiguruj</button>
+      </div>
+    </div>
+    
+    <div class="car-details">
+      <h2>Konfiguracja samochodu</h2>
+      <form onsubmit="return validateForm()">
+        <label for="financing">Finansowanie:</label><br>
+        <input type="radio" name="financing" value="leasing"> Leasing
+        <input type="radio" name="financing" value="gotówka"> Gotówka<br><br>
+        
+        <label for="previous-owner">Przeszły właściciel:</label><br>
+        <input type="text" name="previous-owner" placeholder="Imię i nazwisko"><br><br>
+        
+        <label for="delivery-date">Data dostawy:</label><br>
+        <input name="delivery-date" readonly><br><br>
+        
+        <label for="accessories">Akcesoria:</label><br>
+        <select name="accessories" multiple>
+          <option value="1000">ubezpieczenie (1000 PLN)</option>
+          <option value="2000">klimatyzacja (2000 PLN)</option>
+          <option value="3000">ogrzewanie (3000 PLN)</option>
+          <!-- więcej opcji akcesoriów -->
+        </select><br><br>
+        <!--<p>Cena auta: <span id="car-price"></span></p>
+        <p>Cena akcesoriów: <span id="accessories-price"></span></p>
+        <p>Cena całkowita: <span id="total-price"></span></p>-->
+        
+        <button type="submit">Zakup</button>
+        <button type="button" onclick="goBack()">Powrót</button>
+      </form>
+      
+      <p class="error" id="form-error"></p>
+    </div>
+    
+    <div id="purchase-confirmation" class="car-details">
+      <h2>Potwierdzenie zakupu</h2>
+      <p>Dziękujemy za zakup samochodu!</p>
+      <p>Metoda płatności: <span id="payment-method"></span></p>
+      <p>Cena auta: <span id="car-price-confirmation"></span></p>
+      <p>Cena akcesoriów: <span id="accessories-price-confirmation"></span></p>
+      <p>Cena całkowita: <span id="total-price-confirmation"></span></p>
+      <button type="button" onclick="goBack()">Powrót</button>
+    </div>
+  </div>
+  
+  <script>
+    var carPrice = 0;
+    var mp = 0;
+    function showConfigurationForm(carId, money) {
+       mp = money;
+     // Ukryj listę samochodów
+     document.querySelector('.car-list').style.display = 'none';
+      
+      // Wyświetl formularz konfiguracji
+      document.querySelector('.car-details').style.display = 'block';
+      var currentDate = new Date();
+      var deliveryDate = new Date(currentDate.getTime() + (14 * 24 * 60 * 60 * 1000));
+      var formattedDeliveryDate = deliveryDate.toISOString().split('T')[0];
+      document.querySelector('input[name="delivery-date"]').value = formattedDeliveryDate;
+      
+      // Ustaw zdjęcie samochodu w formularzu konfiguracji
+      var carImageSrc = document.querySelector('.car:nth-child(' + carId + ') img').src;
+      document.querySelector('#purchased-car-image').src = carImageSrc;
+
+      // Ustaw datę dostawy (14 dni od dzisiejszego dnia)
+      
+    }
+    
+    function validateForm() {
+        cp = mp;
+      // Walidacja formularza
+      
+      // Sprawdź czy pola są wypełnione
+      var financing = document.querySelector('input[name="financing"]:checked');
+      var previousOwner = document.querySelector('input[name="previous-owner"]');
+      var accessories = document.querySelectorAll('select[name="accessories"] option:checked');
+      
+      if (!financing || !previousOwner.value || accessories.length === 0) {
+        document.querySelector('#form-error').textContent = 'Proszę wypełnić wszystkie pola.';
+        return false;
+      }
+      
+      // Sprawdź poprawność imienia i nazwiska
+      var ownerName = previousOwner.value.trim().split(' ');
+      if (ownerName.length !== 2 || ownerName[0].length < 2 || ownerName[1].length < 2) {
+        document.querySelector('#form-error').textContent = 'Proszę podać imię i nazwisko w formacie: Imię Nazwisko.';
+        return false;
+      }
+      
+      // Jeśli formularz jest poprawny, pokaż potwierdzenie zakupu
+      showPurchaseConfirmation(cp);
+      
+      // Zablokuj możliwość ponownego wysłania formularza
+      document.querySelector('button[type="submit"]').disabled = true;
+      
+      return false;
+    }
+    
+    function showPurchaseConfirmation(price) {
+      // Pobierz wybrane opcje z formularza
+      var financing = document.querySelector('input[name="financing"]:checked').value;
+      var accessories = document.querySelectorAll('select[name="accessories"] option:checked');
+      
+      // Oblicz ceny
+      var carPrice = parseInt(price);
+      var accessoriesPrice = 0;
+      var totalPrice = 0;
+  
+      
+      // Oblicz cenę akcesoriów
+      if (accessories.length > 0) {
+        for (var i = 0; i < accessories.length; i++) {
+          accessoriesPrice += parseInt(accessories[i].value);
+        }
+      }
+      
+      // Oblicz cenę całkowitą
+      totalPrice = carPrice + accessoriesPrice;
+      
+      // Wyświetl potwierdzenie zakupu
+      document.querySelector('#payment-method').textContent = financing;
+      document.querySelector('#car-price-confirmation').textContent = carPrice;
+      document.querySelector('#accessories-price-confirmation').textContent = accessoriesPrice;
+      document.querySelector('#total-price-confirmation').textContent = totalPrice;
+      
+      // Ukryj formularz konfiguracji
+      document.querySelector('.car-details').style.display = 'none';
+      
+      // Wyświetl potwierdzenie zakupu
+      document.querySelector('#purchase-confirmation').style.display = 'block';
+    }
+    function getMoney(money){
+
+        carPrice = money
+
+    }
+    
+    function goBack() {
+      // Powrót do listy samochodów
+      // Ukryj potwierdzenie zakupu
+      document.querySelector('.car-details').style.display = 'none';
+      document.querySelector('#purchase-confirmation').style.display = 'none';
+      document.querySelector('button[type="submit"]').disabled = false;
+      
+      // Wyświetl listę samochodów
+      document.querySelector('.car-list').style.display = 'block';
+      
+      // Zresetuj formularz konfiguracji
+      document.querySelector('form').reset();
+      document.querySelector('#form-error').textContent = '';
+      
+      // Wyzeruj ceny
+      document.querySelector('#car-price').textContent = '';
+      document.querySelector('#accessories-price').textContent = '';
+      document.querySelector('#total-price').textContent = '';
+      
+      
+    }
+  </script>
+</body>
+</html>
